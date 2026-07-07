@@ -117,7 +117,11 @@ public class KwsProjectRepositoryTests
         Assert.Equal("sales.xlsx", openedDataSource.Workbook.FileName);
         Assert.Equal("Sales", openedDataSource.ActiveWorksheetName);
         Assert.Equal("Region", Assert.Single(openedDataSource.ColumnMappings).TargetField.Name);
-        Assert.Equal("A1:C10", Assert.Single(openedDataSource.Workbook.Worksheets).SelectedRange!.RangeReference);
+        var openedRange = Assert.Single(openedDataSource.Workbook.Worksheets).SelectedRange!;
+        Assert.Equal(1, openedRange.HeaderRowIndex);
+        Assert.Equal(2, openedRange.DataStartRow);
+        Assert.Equal(10, openedRange.DataEndRow);
+        Assert.Equal("A2:C10", openedRange.RangeReference);
 
         var openedReport = Assert.Single(openedProject.Reports);
         var openedPage = Assert.Single(openedReport.Pages);
