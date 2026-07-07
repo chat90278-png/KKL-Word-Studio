@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>KKL.WordStudio.Shared</RootNamespace>
+    <AssemblyName>KKL.WordStudio.Shared</AssemblyName>
+    <!-- Shared has ZERO project references by design: every other layer may depend on it. -->
+  </PropertyGroup>
+
+</Project>
