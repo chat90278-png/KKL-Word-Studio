@@ -1,0 +1,67 @@
+<UserControl x:Class="KKL.WordStudio.UI.Views.ExcelWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar: open file, sheet tabs -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Open Excel File..." Command="{Binding OpenExcelFileCommand}" Padding="8,4" Margin="0,0,8,0" />
+            <ComboBox Width="220" Margin="0,0,8,0"
+                      ItemsSource="{Binding OpenWorkbooks}"
+                      SelectedItem="{Binding SelectedWorkbook}"
+                      DisplayMemberPath="DisplayName" />
+            <ComboBox Width="160"
+                      ItemsSource="{Binding SelectedWorkbook.SheetNames}"
+                      SelectedItem="{Binding SelectedWorkbook.SelectedSheetName}" />
+        </StackPanel>
+
+        <!-- Range configuration -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Start row:" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <TextBox Width="50" Text="{Binding StartRow, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,12,0" />
+            <CheckBox Content="First row is header" IsChecked="{Binding StartRowIsHeader}" VerticalAlignment="Center" Margin="0,0,12,0" />
+            <Button Content="Detect Data End" Command="{Binding DetectDataRangeCommand}" Padding="8,4" Margin="0,0,8,0" />
+            <TextBlock Text="{Binding DetectedDataEndRow, StringFormat='End row: {0}'}" VerticalAlignment="Center" Margin="0,0,12,0" />
+            <TextBlock VerticalAlignment="Center" Foreground="Gray">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value="(manual)" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding WasAutoDetected}" Value="True">
+                                <Setter Property="Text" Value="(auto-detected)" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Preview grid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding PreviewTable}" AutoGenerateColumns="True"
+                   IsReadOnly="True" HeadersVisibility="Column" CanUserAddRows="False" />
+
+        <!-- Column mapping -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,8,0,4">
+            <Button Content="Generate Column Mappings" Command="{Binding GenerateColumnMappingsCommand}" Padding="8,4" Margin="0,0,8,0" />
+            <TextBlock Text="Data source name:" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <TextBox Width="160" Text="{Binding DataSourceName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,12,0" />
+            <Button Content="Add to Project" Command="{Binding AddDataSourceToProjectCommand}" Padding="8,4" Margin="0,0,12,0" />
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Foreground="Gray" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="4" Height="120" ItemsSource="{Binding ColumnMappings}" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Source Column" Binding="{Binding SourceColumn}" IsReadOnly="True" Width="100" />
+                <DataGridTextColumn Header="Field Name" Binding="{Binding FieldName}" Width="180" />
+                <DataGridTextColumn Header="Data Type" Binding="{Binding DataType}" Width="100" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,109 @@
+<UserControl x:Class="KKL.WordStudio.UI.Views.PreviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="BlockTextStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Kind}" Value="Heading">
+                    <Setter Property="FontSize" Value="20" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Kind}" Value="AltHeading">
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Kind}" Value="Table">
+                    <Setter Property="FontFamily" Value="Consolas" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Foreground" Value="DarkSlateGray" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Kind}" Value="TableRow">
+                    <Setter Property="FontFamily" Value="Consolas" />
+                    <Setter Property="Margin" Value="16,1,0,1" />
+                    <Setter Property="FontSize" Value="12" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel Margin="8">
+
+        <!-- Zoom toolbar -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Preview" FontWeight="Medium" VerticalAlignment="Center" Margin="0,0,16,0" />
+            <Button Content="-" Command="{Binding ZoomOutCommand}" Width="28" Margin="0,0,4,0" />
+            <TextBlock Text="{Binding ZoomFactor, StringFormat={}{0:P0}}" VerticalAlignment="Center" Width="48" TextAlignment="Center" />
+            <Button Content="+" Command="{Binding ZoomInCommand}" Width="28" Margin="4,0,8,0" />
+            <Button Content="Reset" Command="{Binding ResetZoomCommand}" Padding="8,2" />
+        </StackPanel>
+
+        <!-- Scrollable A4 page. Only one simulated page (see PreviewViewModel doc) —
+             real multi-page pagination is future Engine work (ADR 0002/0005). -->
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                      Background="#FFE8E8E8">
+            <Border Background="White" BorderBrush="Gray" BorderThickness="1" Margin="24"
+                    Width="{Binding PageWidth}" Height="{Binding PageHeight}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Border.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ZoomFactor}" ScaleY="{Binding ZoomFactor}" />
+                </Border.LayoutTransform>
+
+                <!-- All three regions share the Report's real page margin, applied once here. -->
+                <DockPanel Margin="{Binding PageMargin}">
+
+                    <!-- Header band -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <ItemsControl ItemsSource="{Binding HeaderBlocks}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}" Style="{StaticResource BlockTextStyle}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Separator />
+                    </StackPanel>
+
+                    <!-- Footer band -->
+                    <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                        <Separator />
+                        <Grid>
+                            <ItemsControl ItemsSource="{Binding FooterBlocks}" HorizontalAlignment="Left">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Text}" Style="{StaticResource BlockTextStyle}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="Page 1" HorizontalAlignment="Right" Foreground="Gray"
+                                       Visibility="{Binding ShowPageNumber, Converter={StaticResource BoolToVisibility}}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Body: optional TOC, then flowing content -->
+                    <StackPanel>
+                        <StackPanel Visibility="{Binding HasTableOfContents, Converter={StaticResource BoolToVisibility}}" Margin="0,0,0,16">
+                            <TextBlock Text="Table of Contents" FontSize="18" FontWeight="Bold" Margin="0,0,0,8" />
+                            <ItemsControl ItemsSource="{Binding TableOfContents}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Text}" Margin="{Binding Indent, Converter={StaticResource IndentToThickness}}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Separator Margin="0,12,0,0" />
+                        </StackPanel>
+
+                        <ItemsControl ItemsSource="{Binding BodyBlocks}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}" Style="{StaticResource BlockTextStyle}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

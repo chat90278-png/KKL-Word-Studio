@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <FontFamily x:Key="Font.Family.Default">Segoe UI</FontFamily>
+    <system:Double xmlns:system="clr-namespace:System;assembly=mscorlib" x:Key="Font.Size.Default">13</system:Double>
+
+    <Style TargetType="Menu">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+    </Style>
+
+    <Style TargetType="StatusBar">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface}" />
+    </Style>
+
+</ResourceDictionary>

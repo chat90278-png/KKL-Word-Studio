@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>KKL.WordStudio.UI</RootNamespace>
+    <AssemblyName>KKL.WordStudio</AssemblyName>
+    <ApplicationIcon></ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- UI is the only project allowed to reference everything: it is the
+         composition root. Application/Infrastructure/Rendering/Domain never
+         reference UI. -->
+    <ProjectReference Include="..\KKL.WordStudio.Application\KKL.WordStudio.Application.csproj" />
+    <ProjectReference Include="..\KKL.WordStudio.Infrastructure\KKL.WordStudio.Infrastructure.csproj" />
+    <ProjectReference Include="..\KKL.WordStudio.Rendering\KKL.WordStudio.Rendering.csproj" />
+    <ProjectReference Include="..\KKL.WordStudio.Domain\KKL.WordStudio.Domain.csproj" />
+    <ProjectReference Include="..\KKL.WordStudio.Shared\KKL.WordStudio.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
