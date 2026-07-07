@@ -1,5 +1,6 @@
 namespace KKL.WordStudio.Domain.DataSources;
 
+using System.Text.Json.Serialization;
 using KKL.WordStudio.Shared.Spreadsheet;
 
 /// <summary>
@@ -37,6 +38,7 @@ public sealed class DataRange
     public bool HasHeaderRow => HeaderRowIndex.HasValue;
 
     /// <summary>Human-readable A1-style reference for display only — always derived, never stored, so it can never drift out of sync with the structured fields above.</summary>
+    [JsonIgnore]
     public string RangeReference
     {
         get

@@ -27,7 +27,11 @@ using Microsoft.Extensions.Logging;
 /// </summary>
 public sealed class KwsProjectRepository : IProjectService
 {
-    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        WriteIndented = true,
+        PreferredObjectCreationHandling = System.Text.Json.Serialization.JsonObjectCreationHandling.Populate
+    };
 
     private readonly ILogger<KwsProjectRepository> _logger;
 
