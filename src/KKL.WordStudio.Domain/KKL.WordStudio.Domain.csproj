@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>KKL.WordStudio.Domain</RootNamespace>
+    <AssemblyName>KKL.WordStudio.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Domain depends ONLY on Shared. No Infrastructure, no Application,
+         no exporter/plugin concepts. This is the single most important
+         reference-direction rule in the solution. -->
+    <ProjectReference Include="..\KKL.WordStudio.Shared\KKL.WordStudio.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
