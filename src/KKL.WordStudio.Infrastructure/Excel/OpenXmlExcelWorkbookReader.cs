@@ -4,6 +4,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using KKL.WordStudio.Application.Excel;
 using KKL.WordStudio.Domain.DataSources;
+using DomainWorkbook = KKL.WordStudio.Domain.DataSources.Workbook;
+using DomainWorksheet = KKL.WordStudio.Domain.DataSources.Worksheet;
 using KKL.WordStudio.Shared.Results;
 using KKL.WordStudio.Shared.Spreadsheet;
 using Microsoft.Extensions.Logging;
@@ -20,24 +22,28 @@ public sealed class OpenXmlExcelWorkbookReader : IExcelWorkbookReader
 
     public OpenXmlExcelWorkbookReader(ILogger<OpenXmlExcelWorkbookReader> logger) => _logger = logger;
 
-    public Task<Result<Workbook>> OpenWorkbookAsync(string filePath, CancellationToken cancellationToken = default)
+    public Task<Result<DomainWorkbook>> OpenWorkbookAsync(string filePath, CancellationToken cancellationToken = default)
     {
         try
         {
             if (!File.Exists(filePath))
-                return Task.FromResult(Result.Failure<Workbook>($"Excel file not found: {filePath}"));
+                return Task.FromResult(Result.Failure<DomainWorkbook>($"Excel file not found: {filePath}"));
 
             using var document = SpreadsheetDocument.Open(filePath, false);
             var workbookPart = document.WorkbookPart
                 ?? throw new InvalidDataException("The workbook has no WorkbookPart.");
 
-            var workbook = new Workbook { FileName = Path.GetFileName(filePath) };
+            var workbook = new DomainWorkbook
+            {
+                FileName = Path.GetFileName(filePath),
+                SourcePath = filePath
+            };
 
             var sheets = workbookPart.Workbook.Sheets?.Elements<Sheet>() ?? Enumerable.Empty<Sheet>();
             foreach (var sheet in sheets)
             {
                 if (sheet.Name is null) continue;
-                workbook.Worksheets.Add(new Worksheet { Name = sheet.Name.Value! });
+                workbook.Worksheets.Add(new DomainWorksheet { Name = sheet.Name.Value! });
             }
 
             return Task.FromResult(Result.Success(workbook));
@@ -45,7 +51,7 @@ public sealed class OpenXmlExcelWorkbookReader : IExcelWorkbookReader
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to open workbook {FilePath}", filePath);
-            return Task.FromResult(Result.Failure<Workbook>($"Could not open Excel file: {ex.Message}"));
+            return Task.FromResult(Result.Failure<DomainWorkbook>($"Could not open Excel file: {ex.Message}"));
         }
     }
 
