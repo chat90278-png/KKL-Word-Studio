@@ -7,6 +7,7 @@ using KKL.WordStudio.Application.Workspace;
 using KKL.WordStudio.Domain.Projects;
 using KKL.WordStudio.UI.Services;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 /// <summary>Shell-level ViewModel: owns the active Project and pushes it into IWorkspace, which every other panel (Project Explorer, Report Designer, Table Properties, Preview) reacts to.</summary>
 public sealed partial class MainViewModel : ViewModelBase
