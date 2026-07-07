@@ -1,5 +1,6 @@
 namespace KKL.WordStudio.Domain.DataSources;
 
+using System.Text.Json.Serialization;
 using KKL.WordStudio.Domain.DataBinding;
 
 /// <summary>
@@ -9,6 +10,8 @@ using KKL.WordStudio.Domain.DataBinding;
 /// without touching Report/Table/DataRegion binding code, which only ever
 /// depends on IDataSourceDefinition.
 /// </summary>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(ExcelDataSource), "excel")]
 public abstract class DataSource : IDataSourceDefinition
 {
     public Guid Id { get; init; } = Guid.NewGuid();
@@ -16,6 +19,7 @@ public abstract class DataSource : IDataSourceDefinition
 
     public List<ColumnMapping> ColumnMappings { get; } = new();
 
+    [JsonIgnore]
     public IReadOnlyList<DataField> Fields => ColumnMappings.Select(m => m.TargetField).ToList();
 
     /// <summary>
@@ -25,5 +29,6 @@ public abstract class DataSource : IDataSourceDefinition
     /// ExcelDataSource` / `is SqlDataSource` / ...) so adding a new
     /// DataSource subtype never requires touching the resolution logic.
     /// </summary>
+    [JsonIgnore]
     public abstract string ProviderKey { get; }
 }

@@ -98,6 +98,7 @@ public sealed class WordExporter : IReportExporter
         styles.Append(BuildHeadingStyle("Heading2", "heading 2", outlineLevel: 1, fontSizeHalfPoints: "28"));
 
         stylesPart.Styles = styles;
+        styles.Save(stylesPart);
     }
 
     private static Style BuildHeadingStyle(string styleId, string name, int outlineLevel, string fontSizeHalfPoints) => new()
@@ -121,6 +122,7 @@ public sealed class WordExporter : IReportExporter
             foreach (var node in document.HeaderNodes)
                 AppendNode(header, node);
             headerPart.Header = header;
+            header.Save(headerPart);
 
             sectionProperties.Append(new HeaderReference { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) });
         }
@@ -136,6 +138,7 @@ public sealed class WordExporter : IReportExporter
                 footer.AppendChild(BuildPageNumberParagraph());
 
             footerPart.Footer = footer;
+            footer.Save(footerPart);
             sectionProperties.Append(new FooterReference { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) });
         }
     }
