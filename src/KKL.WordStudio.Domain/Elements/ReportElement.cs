@@ -1,5 +1,6 @@
 namespace KKL.WordStudio.Domain.Elements;
 
+using System.Text.Json.Serialization;
 using KKL.WordStudio.Domain.Styling;
 using KKL.WordStudio.Domain.Visitors;
 
@@ -10,6 +11,15 @@ using KKL.WordStudio.Domain.Visitors;
 /// visitor pattern so exporters and the renderer can traverse the tree
 /// uniformly.
 /// </summary>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(BarcodeElement), "barcode")]
+[JsonDerivedType(typeof(ChartElement), "chart")]
+[JsonDerivedType(typeof(Container), "container")]
+[JsonDerivedType(typeof(DataRegion), "dataRegion")]
+[JsonDerivedType(typeof(ImageElement), "image")]
+[JsonDerivedType(typeof(ShapeElement), "shape")]
+[JsonDerivedType(typeof(TableElement), "table")]
+[JsonDerivedType(typeof(TextElement), "text")]
 public abstract class ReportElement
 {
     public Guid Id { get; init; } = Guid.NewGuid();
