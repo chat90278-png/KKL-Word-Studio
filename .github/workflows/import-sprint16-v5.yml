@@ -3,7 +3,7 @@ name: Import Sprint 16 stabilized v5
 on:
   push:
     branches:
-      - chatgpt/import-sprint16-v5
+      - main
 
 permissions:
   contents: write
@@ -12,7 +12,7 @@ jobs:
   import-source:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout import branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
