@@ -1,0 +1,39 @@
+name: Import Sprint 16 stabilized v5
+
+on:
+  push:
+    branches:
+      - chatgpt/import-sprint16-v5
+
+permissions:
+  contents: write
+
+jobs:
+  import-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout import branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace repository tree with stabilized source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir .sprint16-import
+          tar -xzf delivery/KKL.WordStudio-Sprint16-Stabilized-v5.tar.gz -C .sprint16-import
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .sprint16-import -exec rm -rf {} +
+          shopt -s dotglob nullglob
+          mv .sprint16-import/* .
+          rmdir .sprint16-import
+
+      - name: Commit exact Sprint 16 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "ChatGPT GitHub Sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: import Sprint 16 stabilized v5"
+          git push origin HEAD:main
